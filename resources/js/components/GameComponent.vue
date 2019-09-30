@@ -47,8 +47,21 @@
                         ctx.lineWidth = 2;
                         ctx.strokeStyle = '#003300';
                         ctx.stroke();
+
+                        this.drawX(ctx, x * this.provider.tileW, y * this.provider.tileH);
                     }
                 }
+            },
+            drawX(ctx,x, y)
+            {
+                ctx.beginPath();
+
+                ctx.moveTo(x - 20, y - 20);
+                ctx.lineTo(x + 20, y + 20);
+
+                ctx.moveTo(x + 20, y - 20);
+                ctx.lineTo(x - 20, y + 20);
+                ctx.stroke();
             }
         }
     }
