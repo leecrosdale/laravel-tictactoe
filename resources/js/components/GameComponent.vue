@@ -48,7 +48,7 @@
                         ctx.strokeStyle = '#003300';
                         ctx.stroke();
 
-                        this.drawX(ctx, x * this.provider.tileW, y * this.provider.tileH);
+                        this.drawX(ctx, x * this.provider.tileW + (this.provider.tileW / 2) , y * this.provider.tileH + (this.provider.tileH / 2));
                     }
                 }
             },
