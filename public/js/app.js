@@ -1911,15 +1911,21 @@ __webpack_require__.r(__webpack_exports__);
           ctx.strokeStyle = '#003300';
           ctx.stroke();
           this.drawX(ctx, x * this.provider.tileW + this.provider.tileW / 2, y * this.provider.tileH + this.provider.tileH / 2);
+          this.drawO(ctx, x * this.provider.tileW + this.provider.tileW / 2, y * this.provider.tileH + this.provider.tileH / 2);
         }
       }
     },
     drawX: function drawX(ctx, x, y) {
       ctx.beginPath();
-      ctx.moveTo(x - 20, y - 20);
-      ctx.lineTo(x + 20, y + 20);
-      ctx.moveTo(x + 20, y - 20);
-      ctx.lineTo(x - 20, y + 20);
+      ctx.moveTo(x - 40, y - 40);
+      ctx.lineTo(x + 40, y + 40);
+      ctx.moveTo(x + 40, y - 40);
+      ctx.lineTo(x - 40, y + 40);
+      ctx.stroke();
+    },
+    drawO: function drawO(ctx, x, y) {
+      ctx.beginPath();
+      ctx.arc(x, y, 50, 0, 2 * Math.PI);
       ctx.stroke();
     }
   }
