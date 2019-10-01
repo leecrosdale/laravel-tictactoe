@@ -8,7 +8,7 @@
                     <div class="card-header">Dashboard</div>
 
                     <div class="card-body">
-                        <game-component></game-component>
+                        <game-component team="{{ $team }}"></game-component>
                     </div>
                 </div>
             </div>

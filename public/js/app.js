@@ -1877,6 +1877,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1884,19 +1894,76 @@ __webpack_require__.r(__webpack_exports__);
       // so child components will update when `context` changes.
       provider: {
         // This is the CanvasRenderingContext that children will draw to.
+        canvas: null,
         context: null,
         tileW: 200,
         tileH: 200,
         tileCount: 3
       },
-      renderingStatus: 'Not Rendering'
+      renderingStatus: 'Not Rendering',
+      game: {}
     };
   },
   mounted: function mounted() {
+    this.provider.canvas = this.$refs['game-canvas'];
     this.provider.context = this.$refs['game-canvas'].getContext('2d');
-    this.render();
+    var self = this;
+    this.provider.canvas.addEventListener('mousedown', function (e) {
+      self.getCursorPosition(e);
+    });
+    this.getGame();
+  },
+  props: ['team'],
+  computed: {
+    current_turn: function current_turn() {
+      switch (this.team) {
+        case "x":
+          return this.isEven(this.game.turn_number);
+          break;
+
+        case "o":
+          return !this.isEven(this.game.turn_number);
+          break;
+      }
+    }
   },
   methods: {
+    getCursorPosition: function getCursorPosition(event) {
+      var _this = this;
+
+      if (this.current_turn) {
+        var rect = this.provider.canvas.getBoundingClientRect();
+        var x = event.clientX - rect.left;
+        var y = event.clientY - rect.top;
+        var box = this.calculateBox(x, y);
+        window.axios.post('pick', {
+          row: box[0],
+          col: box[1],
+          team: this.team
+        }).then(function (response) {
+          _this.getGame();
+        });
+      } else {
+        alert('not your turn');
+      }
+    },
+    calculateBox: function calculateBox(x, y) {
+      var row = y < 200 ? 0 : y > 400 ? 2 : 1;
+      var col = x < 200 ? 0 : x > 400 ? 2 : 1;
+      return [row, col];
+    },
+    isEven: function isEven(n) {
+      return n % 2 === 0;
+    },
+    getGame: function getGame() {
+      var _this2 = this;
+
+      window.axios.get('update').then(function (response) {
+        _this2.game = response.data;
+
+        _this2.render();
+      });
+    },
     render: function render() {
       if (!this.provider.context) return;
       var ctx = this.provider.context;
@@ -1910,8 +1977,22 @@ __webpack_require__.r(__webpack_exports__);
           ctx.lineWidth = 2;
           ctx.strokeStyle = '#003300';
           ctx.stroke();
-          this.drawX(ctx, x * this.provider.tileW + this.provider.tileW / 2, y * this.provider.tileH + this.provider.tileH / 2);
-          this.drawO(ctx, x * this.provider.tileW + this.provider.tileW / 2, y * this.provider.tileH + this.provider.tileH / 2);
+
+          for (var k in this.game.picks) {
+            var pick = this.game.picks[k];
+
+            if (pick.col === x && pick.row === y) {
+              switch (pick.team) {
+                case "x":
+                  this.drawX(ctx, x * this.provider.tileW + this.provider.tileW / 2, y * this.provider.tileH + this.provider.tileH / 2);
+                  break;
+
+                case "o":
+                  this.drawO(ctx, x * this.provider.tileW + this.provider.tileW / 2, y * this.provider.tileH + this.provider.tileH / 2);
+                  break;
+              }
+            }
+          }
         }
       }
     },
@@ -37275,6 +37356,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _vm._v("\n\n    You are on team: " + _vm._s(_vm.team) + "\n\n    "),
+    _vm.current_turn
+      ? _c("p", [_vm._v("\n        It's your turn\n    ")])
+      : _c("p", [_vm._v("\n        It's not your turn\n    ")]),
+    _vm._v(" "),
     _c("canvas", {
       ref: "game-canvas",
       staticStyle: { background: "#000" },

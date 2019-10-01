@@ -9,6 +9,15 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
+        <!-- Scripts -->
+        <script src="{{ asset('js/app.js') }}" defer></script>
+
+        <!-- Fonts -->
+        <link rel="dns-prefetch" href="//fonts.gstatic.com">
+
+        <!-- Styles -->
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
         <!-- Styles -->
         <style>
             html, body {
@@ -48,8 +57,8 @@
                 font-size: 84px;
             }
 
-            .links > a {
-                color: #636b6f;
+            a {
+                color: #000;
                 padding: 0 25px;
                 font-size: 13px;
                 font-weight: 600;
@@ -81,18 +90,12 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Tic-Tac-Toe
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <button class="btn btn-success"><a href="{{url('play/x')}}">Join X</a></button>
+                    <button class="btn btn-danger"><a href="{{url('play/o')}}">Join O</a></button>
                 </div>
             </div>
         </div>

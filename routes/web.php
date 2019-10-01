@@ -15,11 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/play', function()
-{
-   return view('play');
-});
+Route::get('/play/update', 'GameController@update');
+Route::post('/play/pick', 'GameController@pick');
+Route::get('/play/{team}', 'GameController@play');
 
 Auth::routes();
 
