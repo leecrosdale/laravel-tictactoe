@@ -15,4 +15,17 @@ class Game extends Model
         return $this->hasMany(Pick::class);
     }
 
+    public function getCurrentTeamAttribute()
+    {
+        if ($this->isEven($this->turn_number)) {
+            return 'x';
+        }
+
+        return 'o';
+    }
+
+    private function isEven($value) {
+        return $value % 2 === 0;
+    }
+
 }

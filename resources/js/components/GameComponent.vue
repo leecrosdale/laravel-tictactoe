@@ -43,6 +43,24 @@
                 self.getCursorPosition(e);
             });
             this.getGame();
+
+            Echo.channel('game').listen('NextTurn', (e) => {
+                this.getGame();
+            });
+
+            Echo.channel('game').listen('Win', (e) => {
+
+                if (this.current_turn) {
+                    alert('You win');
+                } else {
+                    alert('You lose');
+                }
+            });
+
+            Echo.channel('game').listen('Draw', (e) => {
+                alert('Game Draw');
+            });
+
         },
         props: ['team'],
         computed: {
@@ -70,7 +88,7 @@
 
                     const box = this.calculateBox(x, y);
 
-                    window.axios.post('pick', {row: box[0], col: box[1], team: this.team}).then((response) => {
+                    axios.post('pick', {row: box[0], col: box[1], team: this.team}).then((response) => {
                         this.getGame();
                     });
                 } else {
@@ -91,7 +109,7 @@
                 return n % 2 === 0;
             },
             getGame() {
-                window.axios.get('update').then((response) => {
+                axios.get('update').then((response) => {
                     this.game = response.data;
                     this.render();
                 });
