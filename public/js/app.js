@@ -1887,6 +1887,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1901,7 +1903,8 @@ __webpack_require__.r(__webpack_exports__);
         tileCount: 3
       },
       renderingStatus: 'Not Rendering',
-      game: {}
+      game: {},
+      status: 'Playing'
     };
   },
   mounted: function mounted() {
@@ -1918,14 +1921,18 @@ __webpack_require__.r(__webpack_exports__);
       _this.getGame();
     });
     Echo.channel('game').listen('Win', function (e) {
+      _this.getGame();
+
       if (_this.current_turn) {
-        alert('You win');
+        _this.status = 'You win!';
       } else {
-        alert('You lose');
+        _this.status = 'You lose!';
       }
     });
     Echo.channel('game').listen('Draw', function (e) {
-      alert('Game Draw');
+      _this.getGame();
+
+      _this.status = 'Game Draw';
     });
   },
   props: ['team'],
@@ -1992,6 +1999,9 @@ __webpack_require__.r(__webpack_exports__);
           ctx.lineWidth = 2;
           ctx.strokeStyle = '#003300';
           ctx.stroke();
+          ctx.fillStyle = 'red';
+          ctx.font = '12px serif';
+          ctx.fillText(y + ',' + x, x * this.provider.tileW + this.provider.tileW / 2, y * this.provider.tileH + this.provider.tileH / 2);
 
           for (var k in this.game.picks) {
             var pick = this.game.picks[k];
@@ -47207,7 +47217,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._v("\n\n    You are on team: " + _vm._s(_vm.team) + "\n\n    "),
+    _vm._v("\n\n    You are on team: " + _vm._s(_vm.team) + " "),
+    _c("br"),
+    _vm._v("\n\n    Game Status: " + _vm._s(_vm.status) + "\n\n    "),
     _vm.current_turn
       ? _c("p", [_vm._v("\n        It's your turn\n    ")])
       : _c("p", [_vm._v("\n        It's not your turn\n    ")]),

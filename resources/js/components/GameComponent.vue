@@ -1,7 +1,9 @@
 <template>
     <div>
 
-        You are on team: {{ team }}
+        You are on team: {{ team }} <br/>
+
+        Game Status: {{ status }}
 
         <p v-if="current_turn">
             It's your turn
@@ -29,7 +31,8 @@
                     tileCount: 3,
                 },
                 renderingStatus: 'Not Rendering',
-                game: {}
+                game: {},
+                status: 'Playing'
             }
         },
         mounted() {
@@ -50,15 +53,18 @@
 
             Echo.channel('game').listen('Win', (e) => {
 
+                this.getGame();
+
                 if (this.current_turn) {
-                    alert('You win');
+                    this.status = 'You win!'
                 } else {
-                    alert('You lose');
+                    this.status = 'You lose!'
                 }
             });
 
             Echo.channel('game').listen('Draw', (e) => {
-                alert('Game Draw');
+                this.getGame();
+                this.status = 'Game Draw';
             });
 
         },
@@ -122,6 +128,10 @@
 
                 for (let y = 0; y < this.provider.tileCount; y++) {
                     for (let x = 0; x < this.provider.tileCount; x++) {
+
+
+
+
                         ctx.beginPath();
                         ctx.rect(
                             x * this.provider.tileW,
@@ -134,6 +144,12 @@
                         ctx.lineWidth = 2;
                         ctx.strokeStyle = '#003300';
                         ctx.stroke();
+
+
+                        ctx.fillStyle='red';
+                        ctx.font = '12px serif';
+                        ctx.fillText(y + ',' + x, x * this.provider.tileW + (this.provider.tileW / 2) , y * this.provider.tileH + (this.provider.tileH / 2));
+
 
 
                         for (let k in this.game.picks) {

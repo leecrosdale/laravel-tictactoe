@@ -27,32 +27,6 @@ class GameController extends Controller
         return Game::first();
     }
 
-    private function getWinningLines()
-    {
-        $winningLines = [];
-
-        for ($a = 0; $a < $this->grid_size; $a++) {
-            $horizontal = []; // temporary array
-            $vertical = []; // temporary array
-            // Iteration 2
-            for ($b = 0; $b < $this->grid_size; $b++) {
-                // This will append to the temporary row array the position of the row.
-                $horizontal[] = $this->grid_size * $a + $b;
-                // This will append to the temporary column array the position of the column
-                $vertical[] = $this->grid_size * $b + $a;
-            }
-            // Add the generated row to the overall array.
-            $winningLines['Horizontal']['Row ' . ($a + 1)] = $horizontal;
-            // Add the generated column to the overall array
-            $winningLines['Vertical']['Column ' . ($a + 1)] = $vertical;
-            // This will append to the overall array the position of the diagonals
-            $winningLines['Diagonal']['backslash'][] = $this->grid_size * $a + $a;
-            // This will append to the overall array the position of the diagonals
-            $winningLines['Diagonal']['forward slash'][] = $this->grid_size * ($a + 1) - ($a + 1);
-        }
-
-        return $winningLines;
-    }
 
     private function checkGame(Game $game)
     {
@@ -66,36 +40,32 @@ class GameController extends Controller
             $picksLines[$pick->team][$pick->row][$pick->col] = $pick->team;
         }
 
-
-        $lines = $this->getWinningLines();
-
-        return $this->checkStatus($lines, $picksLines, $game->current_team);
+        return $this->checkStatus($picksLines, $game->current_team);
 
 
     }
 
-    private function checkStatus($winningLines, $currentLines, $team)
+    private function checkStatus($currentLines, $team)
     {
-        dump($team);
-        dump($currentLines);
-        foreach ($winningLines as $winningLineType)
-        {
-            dump($winningLineType);
-            foreach ($winningLineType as $type) {
+
+        if (isset($currentLines[$team])) {
+            // Horizontal
+            if (isset($currentLines[$team][0][0]) && isset($currentLines[$team][0][1]) && isset($currentLines[$team][0][2])) return 'win';
+            if (isset($currentLines[$team][1][0]) && isset($currentLines[$team][1][1]) && isset($currentLines[$team][1][2])) return 'win';
+            if (isset($currentLines[$team][2][0]) && isset($currentLines[$team][2][1]) && isset($currentLines[$team][2][2])) return 'win';
+
+            // Vertical
+            if (isset($currentLines[$team][0][0]) && isset($currentLines[$team][1][0]) && isset($currentLines[$team][2][0])) return 'win';
+            if (isset($currentLines[$team][0][1]) && isset($currentLines[$team][1][1]) && isset($currentLines[$team][2][1])) return 'win';
+            if (isset($currentLines[$team][0][2]) && isset($currentLines[$team][1][2]) && isset($currentLines[$team][2][2])) return 'win';
 
 
-                $count = 0;
-                foreach ($type as $row => $col) {
-                    dump("$row, $col");
-                    if (isset($currentLines[$team][$row][$col])) {
-                        $count++;
-                    }
-                }
-                if ($count === 3) {
-                    return 'win';
-                }
-            }
+            // Diagonal
+            if (isset($currentLines[$team][0][0]) && isset($currentLines[$team][1][1]) && isset($currentLines[$team][2][2])) return 'win';
+            if (isset($currentLines[$team][0][2]) && isset($currentLines[$team][1][1]) && isset($currentLines[$team][2][0])) return 'win';
         }
+
+
 
         if (Pick::all()->count() === 9) {
             return 'draw';
@@ -107,26 +77,22 @@ class GameController extends Controller
 
     public function pick(Request $request)
     {
+
+
         $game = $this->update();
 
-//        dd($this->checkGame($game));
-
-//        Pick::create([
-//            'game_id' => $game->id,
-//            'team' => $request->team,
-//            'col' => $request->col,
-//            'row' => $request->row,
-//            'turn' => $game->turn_number
-//        ]);
+        Pick::create([
+            'game_id' => $game->id,
+            'team' => $request->team,
+            'col' => $request->col,
+            'row' => $request->row,
+            'turn' => $game->turn_number
+        ]);
 
 
+        $game = Game::find($game->id);
 
         $status = $this->checkGame($game);
-
-        dd($status);
-
-
-
 
         ++$game->turn_number;
 
