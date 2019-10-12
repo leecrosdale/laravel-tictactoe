@@ -1958,7 +1958,7 @@ __webpack_require__.r(__webpack_exports__);
         var x = event.clientX - rect.left;
         var y = event.clientY - rect.top;
         var box = this.calculateBox(x, y);
-        axios.post('pick', {
+        axios.post('vote', {
           row: box[0],
           col: box[1],
           team: this.team
@@ -1981,7 +1981,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       axios.get('update').then(function (response) {
-        _this3.game = response.data;
+        _this3.game = response.data.game;
+        _this3.votes = response.data.votes;
 
         _this3.render();
       });
@@ -2000,11 +2001,22 @@ __webpack_require__.r(__webpack_exports__);
           ctx.strokeStyle = '#003300';
           ctx.stroke();
           ctx.fillStyle = 'red';
-          ctx.font = '12px serif';
-          ctx.fillText(y + ',' + x, x * this.provider.tileW + this.provider.tileW / 2, y * this.provider.tileH + this.provider.tileH / 2);
+          ctx.font = '12px serif'; // ctx.fillText(y + ',' + x, x * this.provider.tileW + (this.provider.tileW / 2) , y * this.provider.tileH + (this.provider.tileH / 2));
 
-          for (var k in this.game.picks) {
-            var pick = this.game.picks[k];
+          var count = 0;
+
+          for (var k in this.votes) {
+            var vote = this.votes[k];
+
+            if (vote.col === x && vote.row === y) {
+              count++;
+            }
+          }
+
+          ctx.fillText(count, x * this.provider.tileW + this.provider.tileW / 2, y * this.provider.tileH + this.provider.tileH / 2);
+
+          for (var _k in this.game.picks) {
+            var pick = this.game.picks[_k];
 
             if (pick.col === x && pick.row === y) {
               switch (pick.team) {
@@ -59505,8 +59517,8 @@ if (token) {
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "ABCDEGF",
-  cluster: "eu",
+  key: "abc",
+  cluster: "mt1",
   wsHost: window.location.hostname,
   wsPort: 6001,
   disableStats: true
@@ -59670,8 +59682,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/tictac/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/tictac/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/lee/code/laravel-tictactoe/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/lee/code/laravel-tictactoe/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -94,7 +94,7 @@
 
                     const box = this.calculateBox(x, y);
 
-                    axios.post('pick', {row: box[0], col: box[1], team: this.team}).then((response) => {
+                    axios.post('vote', {row: box[0], col: box[1], team: this.team}).then((response) => {
                         this.getGame();
                     });
                 } else {
@@ -116,7 +116,8 @@
             },
             getGame() {
                 axios.get('update').then((response) => {
-                    this.game = response.data;
+                    this.game = response.data.game;
+                    this.votes = response.data.votes;
                     this.render();
                 });
             },
@@ -128,9 +129,6 @@
 
                 for (let y = 0; y < this.provider.tileCount; y++) {
                     for (let x = 0; x < this.provider.tileCount; x++) {
-
-
-
 
                         ctx.beginPath();
                         ctx.rect(
@@ -148,8 +146,18 @@
 
                         ctx.fillStyle='red';
                         ctx.font = '12px serif';
-                        ctx.fillText(y + ',' + x, x * this.provider.tileW + (this.provider.tileW / 2) , y * this.provider.tileH + (this.provider.tileH / 2));
+                        // ctx.fillText(y + ',' + x, x * this.provider.tileW + (this.provider.tileW / 2) , y * this.provider.tileH + (this.provider.tileH / 2));
 
+
+                        let count = 0;
+                        for (let k in this.votes) {
+                            let vote = this.votes[k];
+                            if (vote.col === x && vote.row === y) {
+                                count++;
+                            }
+                        }
+
+                        ctx.fillText(count, x * this.provider.tileW + (this.provider.tileW / 2) , y * this.provider.tileH + (this.provider.tileH / 2));
 
 
                         for (let k in this.game.picks) {

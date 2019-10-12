@@ -15,10 +15,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', 'GameController@pick');
+Route::get('/test', function() {
+
+
+    dd(\App\Game::first()->votes);
+});
 
 Route::get('/play/update', 'GameController@update');
-Route::post('/play/pick', 'GameController@pick');
+//Route::post('/play/pick', 'GameController@pick');
+
+Route::post('/play/vote', 'VoteController@vote');
+
 Route::get('/play/{team}', 'GameController@play');
 
 Auth::routes();

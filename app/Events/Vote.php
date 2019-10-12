@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Game;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,21 +10,24 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NextTurn implements ShouldBroadcast
+class Vote
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
-    public $game;
+    public $col;
+    public $row;
+    public $team;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Game $game)
+    public function __construct($col, $row, $team)
     {
-        $this->game = $game;
+        $this->col = $col;
+        $this->row = $row;
+        $this->team = $team;
     }
 
     /**
