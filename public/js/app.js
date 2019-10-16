@@ -59517,11 +59517,9 @@ if (token) {
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "abc",
-  cluster: "mt1",
-  wsHost: window.location.hostname,
-  wsPort: 6001,
-  disableStats: true
+  key: '2f6732601c00bab243ce',
+  cluster: 'eu',
+  forceTLS: true
 });
 
 /***/ }),
@@ -59682,8 +59680,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/lee/code/laravel-tictactoe/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/lee/code/laravel-tictactoe/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/lee/Code/laravel-tictactoe/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/lee/Code/laravel-tictactoe/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
